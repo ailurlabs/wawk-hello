@@ -1,0 +1,25 @@
+[package]
+name = "wawk-hello"
+version = "0.1.0"
+edition = "2021"
+description = "Example wawk plugin — a minimal greeting function for learning plugin development"
+repository = "https://github.com/ailurlabs/wawk-hello"
+license = "MIT"
+
+[workspace]
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+wit-bindgen = "0.42"
+
+[profile.release]
+opt-level = "z"
+lto = "fat"
+codegen-units = 1
+panic = "abort"
+strip = true
+
+[dev-dependencies]
+serde_json = "1"
