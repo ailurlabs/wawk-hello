@@ -34,7 +34,7 @@ impl exports::wawk::plugins::external_functions::Guest for Component {
         match name.as_str() {
             "__init__" => Some("ok".into()),
             "__meta__" => Some(
-                r#"{"name":"wawk-hello","version":"0.1.0","requires":[],"description":"Example plugin demonstrating the wawk plugin API"}"#.into(),
+                r#"{"name":"wawk-hello","version":"0.1.0","namespace":"hello","requires":[],"description":"Example plugin demonstrating the wawk plugin API"}"#.into(),
             ),
             "greet" => {
                 if args.is_empty() {
