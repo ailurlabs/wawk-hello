@@ -15,13 +15,13 @@
 //! | `greet_lang(name)`| Returns greeting in one of 10 languages |
 
 wit_bindgen::generate!({
-    world: "wawk-plugin",
+    world: "hello-plugin",
     path: "wit",
 });
 
 struct Component;
 
-impl exports::wawk::plugins::external_functions::Guest for Component {
+impl exports::wawk::plugins::hello_functions::Guest for Component {
     fn call(name: String, args: Vec<String>) -> Option<String> {
         // Defensive bounds checks
         if name.len() > 64 {
@@ -66,26 +66,13 @@ impl exports::wawk::plugins::external_functions::Guest for Component {
 
 /// Format handler: wawk-hello is not a format plugin, so all methods return
 /// empty/error results. This satisfies the WIT world contract.
-impl exports::wawk::plugins::format_handler::Guest for Component {
-    fn detect(_input: String) -> String {
-        String::new() // Not a format plugin
-    }
-
-    fn parse(_input: String) -> String {
-        r#"{"error":"wawk-hello is not a format plugin"}"#.to_string()
-    }
-
-    fn serialize(_tree_json: String) -> String {
-        r#"{"error":"wawk-hello is not a format plugin"}"#.to_string()
-    }
-}
 
 export!(Component);
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::exports::wawk::plugins::external_functions::Guest;
+    use crate::exports::wawk::plugins::hello_functions::Guest;
 
     #[test]
     fn greet_basic() {
@@ -176,24 +163,4 @@ mod tests {
 
     // --- Format handler tests ---
 
-    #[test]
-    fn format_detect_returns_empty() {
-        use crate::exports::wawk::plugins::format_handler::Guest;
-        let result = Component::detect("some input".into());
-        assert_eq!(result, "");
-    }
-
-    #[test]
-    fn format_parse_returns_error() {
-        use crate::exports::wawk::plugins::format_handler::Guest;
-        let result = Component::parse("some input".into());
-        assert!(result.contains("error"));
-    }
-
-    #[test]
-    fn format_serialize_returns_error() {
-        use crate::exports::wawk::plugins::format_handler::Guest;
-        let result = Component::serialize("{}".into());
-        assert!(result.contains("error"));
-    }
 }
