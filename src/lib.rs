@@ -1,7 +1,7 @@
-//! wawk-hello — Example plugin for wawk.
+//! wawk-hello — Example extension for wawk.
 //!
-//! A minimal plugin that demonstrates the wawk plugin interface.
-//! Use this as a starting point for building your own plugins.
+//! A minimal extension that demonstrates the wawk extension interface.
+//! Use this as a starting point for building your own extensions.
 //!
 //! # Build
 //! ```bash
@@ -15,13 +15,13 @@
 //! | `greet_lang(name)`| Returns greeting in one of 10 languages |
 
 wit_bindgen::generate!({
-    world: "hello-plugin",
+    world: "hello-extension",
     path: "wit",
 });
 
 struct Component;
 
-impl exports::wawk::plugins::hello_functions::Guest for Component {
+impl exports::wawk::extensions::extension_functions::Guest for Component {
     fn call(name: String, args: Vec<String>) -> Option<String> {
         // Defensive bounds checks
         if name.len() > 64 {
@@ -34,7 +34,7 @@ impl exports::wawk::plugins::hello_functions::Guest for Component {
         match name.as_str() {
             "__init__" => Some("ok".into()),
             "__meta__" => Some(
-                r#"{"name":"wawk-hello","version":"0.1.0","namespace":"hello","requires":[],"description":"Example plugin demonstrating the wawk plugin API"}"#.into(),
+                r#"{"name":"wawk-hello","version":"1.0.0","namespace":"hello","requires":[],"description":"Example extension demonstrating the wawk extension API"}"#.into(),
             ),
             "greet" => {
                 if args.is_empty() {
@@ -69,7 +69,7 @@ export!(Component);
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::exports::wawk::plugins::hello_functions::Guest;
+    use crate::exports::wawk::extensions::extension_functions::Guest;
 
     #[test]
     fn greet_basic() {
@@ -133,12 +133,12 @@ mod tests {
     }
 
     #[test]
-    fn meta_contains_plugin_name() {
+    fn meta_contains_extension_name() {
         let result = Component::call("__meta__".into(), vec![]);
         let json_str = result.expect("__meta__ should return Some");
         assert!(
             json_str.contains("wawk-hello"),
-            "__meta__ should contain plugin name"
+            "__meta__ should contain extension name"
         );
     }
 

@@ -1,12 +1,12 @@
-/// WIT world for wawk-hello plugin.
-/// Example/demo plugin with unique interface name for multi-plugin composition.
+/// WIT world for wawk-hello extension.
+/// Example/demo extension with unified interface name.
 
-package wawk:plugins;
+package wawk:extensions;
 
-interface hello-functions {
+interface extension-functions {
     call: func(name: string, args: list<string>) -> option<string>;
 }
 
-world hello-plugin {
-    export hello-functions;
+world hello-extension {
+    export extension-functions;
 }

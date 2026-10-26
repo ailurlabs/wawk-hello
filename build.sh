@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Build script for wawk-hello plugin.
+# Build script for wawk-hello extension.
 # Runs tests, then compiles to a WASM component (wasm32-wasip1).
 #
 # The ecosystem convention is `cargo component build --target wasm32-wasip1`:
 # the artifact is a WASM *component* that `wac plug` can compose into
 # wawk-wasi / wawk-bindgen / wawk-mcp. A plain `cargo build --target
-# wasm32-unknown-unknown` core module cannot be plugged, so do not use it.
+# wasm32-unknown-unknown` core module cannot be composed, so do not use it.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -19,11 +19,23 @@ cargo component build --release --target wasm32-wasip1
 
 WASM="target/wasm32-wasip1/release/wawk_hello.wasm"
 
-# Copy to plugin root
+# Copy to extension root
 cp "$WASM" ./wawk-hello.wasm
+
+# Generate sidecar manifest
+cat > wawk-hello.json <<'MANIFEST'
+{
+  "name": "wawk-hello",
+  "namespace": "hello",
+  "version": "1.0.0",
+  "capabilities": ["functions"],
+  "description": "Example extension demonstrating the wawk extension API"
+}
+MANIFEST
 
 echo "==> Built: $SCRIPT_DIR/wawk-hello.wasm"
 echo "    Size: $(du -h wawk-hello.wasm | cut -f1)"
+echo "==> Generated: $SCRIPT_DIR/wawk-hello.json"
 
 # Show the component world if wasm-tools is available
 if command -v wasm-tools &>/dev/null; then

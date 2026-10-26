@@ -1,0 +1,7 @@
+{
+  "name": "wawk-hello",
+  "namespace": "hello",
+  "version": "1.0.0",
+  "capabilities": ["functions"],
+  "description": "Example extension demonstrating the wawk extension API"
+}
